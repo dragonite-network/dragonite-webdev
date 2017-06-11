@@ -14,26 +14,26 @@
         <table class="detail-table">
           <tr>
             <td width="50%">
-              <detail-item :label="'RTT'" :value="data.rtt" :unit="'ms'"></detail-item>
+              <detail-item :label="'RTT'" :value="data.rtt" :unit="'MS'"></detail-item>
             </td>
             <td>
-              <detail-item :label="'DevRTT'" :value="data.devrtt" :unit="'ms'"></detail-item>
+              <detail-item :label="'DevRTT'" :value="data.devrtt" :unit="'MS'"></detail-item>
             </td>
           </tr>
           <tr>
             <td width="50%">
-              <detail-item :label="'Send'" :value="formatDataSize(data.send).text"></detail-item>
+              <detail-item :label="'Send'" :value="formatDataSize(data.send).num.toFixed(2)" :unit="formatDataSize(data.send).unit"></detail-item>
             </td>
             <td>
-              <detail-item :label="'Recv'" :value="formatDataSize(data.recv).text"></detail-item>
+              <detail-item :label="'Recv'" :value="formatDataSize(data.recv).num.toFixed(2)" :unit="formatDataSize(data.recv).unit"></detail-item>
             </td>
           </tr>
           <tr>
             <td width="50%">
-              <detail-item :label="'SendRaw'" :value="formatDataSize(data.sendraw).text"></detail-item>
+              <detail-item :label="'SendRaw'" :value="formatDataSize(data.sendraw).num.toFixed(2)" :unit="formatDataSize(data.sendraw).unit"></detail-item>
             </td>
             <td>
-              <detail-item :label="'RecvRaw'" :value="formatDataSize(data.recvraw).text"></detail-item>
+              <detail-item :label="'RecvRaw'" :value="formatDataSize(data.recvraw).num.toFixed(2)" :unit="formatDataSize(data.recvraw).unit"></detail-item>
             </td>
           </tr>
           <tr>
