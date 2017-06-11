@@ -3,13 +3,14 @@
     <table class="connection-table">
       <tr>
         <th align="right">#</th>
-        <th align="left">Hash</th>
-        <th align="left">Local Address</th>
-        <th align="left">Remote Address</th>
-        <th align="left">Remarks</th>
+        <th align="left">Desc</th>
+        <th align="left">RemoteAddr</th>
+        <th align="left">RTT</th>
+        <th align="left">Upload Rate</th>
+        <th align="left">Download Rate</th>
         <th align="left">Action</th>
       </tr>
-      <connection></connection>
+      <connection v-for="(conn, index) in latest.connections" :key="index" :index="index" :data="conn"></connection>
     </table>
   </div>
 </template>
@@ -20,7 +21,20 @@
     components: {Connection},
     name: 'landing',
     data () {
-      return {}
+      return {
+        latest: {}
+      }
+    },
+    created () {
+      this.fetchData()
+    },
+    methods: {
+      fetchData () {
+        setInterval(async () => {
+          const data = (await fetch(this.$route.query.api)).json()
+          this.latest = data
+        }, this.$route.query.tick || 1000)
+      }
     }
   }
 </script>

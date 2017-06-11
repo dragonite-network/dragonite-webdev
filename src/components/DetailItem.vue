@@ -1,12 +1,12 @@
 <template>
   <div class="detail-item">
     <div class="di-header">
-      <span class="di-header-label">Delay</span>
-      <span class="di-header-value">200<small>ms</small></span>
+      <span class="di-header-label">{{label}}</span>
+      <span class="di-header-value">{{value}}<small>{{unit}}</small></span>
     </div>
-    <div class="di-chart">
-      <line-chart :data="sampleData" :options="sampleOptions" :width="200" :height="100"></line-chart>
-    </div>
+    <!--<div class="di-chart">-->
+      <!--<line-chart :data="sampleData" :options="sampleOptions" :width="200" :height="100"></line-chart>-->
+    <!--</div>-->
   </div>
 </template>
 
@@ -18,6 +18,7 @@
     components: {
       LineChart
     },
+    props: ['label', 'value', 'unit'],
     data () {
       return {
         sampleData: {

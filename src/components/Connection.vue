@@ -1,27 +1,55 @@
 <template>
   <tbody class="connection">
     <tr @click="toggle">
-      <td align="right">1</td>
-      <!--Hash-->
-      <td>123456</td>
-      <!--Local Address-->
-      <td>:0</td>
-      <!--Remote Address-->
-      <td>128.2.33.61</td>
-      <!--Remarks-->
-      <td>N/A</td>
-      <!--Action-->
-      <td></td>
+      <th align="right">{{index}}</th>
+      <th align="left">{{data.description}}</th>
+      <th align="left">{{data.remote}}</th>
+      <th align="left">{{data.rtt}}</th>
+      <th align="left">{{uprate}}</th>
+      <th align="left">{{downrate}}</th>
+      <th align="left">N/A</th>
     </tr>
     <tr v-if="open">
-      <td colspan="6" class="detail">
+      <td colspan="7" class="detail">
         <table class="detail-table">
           <tr>
             <td width="50%">
-              <detail-item></detail-item>
+              <detail-item :label="'RTT'" :value="data.rtt" :unit="'ms'"></detail-item>
             </td>
             <td>
-
+              <detail-item :label="'DevRTT'" :value="data.devrtt" :unit="'ms'"></detail-item>
+            </td>
+          </tr>
+          <tr>
+            <td width="50%">
+              <detail-item :label="'Send'" :value="data.send"></detail-item>
+            </td>
+            <td>
+              <detail-item :label="'Recv'" :value="data.recv"></detail-item>
+            </td>
+          </tr>
+          <tr>
+            <td width="50%">
+              <detail-item :label="'SendRaw'" :value="data.sendraw"></detail-item>
+            </td>
+            <td>
+              <detail-item :label="'RecvRaw'" :value="data.recvraw"></detail-item>
+            </td>
+          </tr>
+          <tr>
+            <td width="50%">
+              <detail-item :label="'SendPkt'" :value="data.sendpkt"></detail-item>
+            </td>
+            <td>
+              <detail-item :label="'RecvCount'" :value="data.recvcount"></detail-item>
+            </td>
+          </tr>
+          <tr>
+            <td width="50%">
+              <detail-item :label="'Resend'" :value="data.resend"></detail-item>
+            </td>
+            <td>
+              <detail-item :label="'Dup'" :value="data.dup"></detail-item>
             </td>
           </tr>
         </table>
@@ -35,14 +63,34 @@
   export default {
     components: {DetailItem},
     name: 'connection',
+    props: ['data', 'index'],
     data () {
       return {
-        open: false
+        open: false,
+        uprate: 'N/A',
+        downrate: 'N/A'
       }
+    },
+    created () {
+      this.speedCalc()
     },
     methods: {
       toggle () {
         this.open = !this.open
+      },
+      speedCalc () {
+        let prevUprate = 0
+        let prevDownrate = 0
+        setInterval(() => {
+          let upBitps = this.data.sendraw - prevUprate
+          let downBitps = this.data.recvraw - prevDownrate
+
+          this.uprate = (upBitps / (1024 * 1024)).toFixed(2) + ' MB/s'
+          this.downrate = (downBitps / (1024 * 1024)).toFixed(2) + ' MB/s'
+
+          prevUprate = this.data.sendraw
+          prevDownrate = this.data.recvraw
+        }, 1000)
       }
     }
   }
