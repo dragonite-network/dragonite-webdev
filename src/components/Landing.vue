@@ -31,7 +31,10 @@
     methods: {
       fetchData () {
         setInterval(async () => {
-          const data = (await fetch(this.$route.query.api)).json()
+          const raw = await fetch(this.$route.query.api)
+          console.log(raw)
+          const data = JSON.parse(raw)
+          console.log(data)
           this.latest = data
         }, this.$route.query.tick || 1000)
       }
