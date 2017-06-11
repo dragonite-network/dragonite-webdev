@@ -1,5 +1,16 @@
 <template>
   <div class="landing">
+    <div class="options">
+      <p class="options-title">Options</p>
+      <div class="options-field">
+        <label>API Address</label>
+        <input v-model="api">
+      </div>
+      <div class="options-field">
+        <label>Tick</label>
+        <input v-model="tick">
+      </div>
+    </div>
     <table class="connection-table">
       <tr>
         <th align="right">#</th>
@@ -22,7 +33,17 @@
     name: 'landing',
     data () {
       return {
-        latest: {}
+        latest: {},
+        api: this.$route.query.api,
+        tick: this.$route.query.tick
+      }
+    },
+    watch: {
+      api (val) {
+        this.$router.push({ path: '/', query: { api: val, tick: this.tick }})
+      },
+      tick (val) {
+        this.$router.push({ path: '/', query: { api: this.api, tick: val }})
       }
     },
     created () {
@@ -31,11 +52,9 @@
     methods: {
       fetchData () {
         setInterval(async () => {
-          const raw = await fetch(this.$route.query.api)
-          console.log(raw)
-          const data = JSON.parse(raw)
-          console.log(data)
-          this.latest = data
+          const res = await fetch(this.$route.query.api)
+          const json = await res.json()
+          this.latest = json
         }, this.$route.query.tick || 1000)
       }
     }
@@ -45,6 +64,25 @@
 <style lang="scss">
   .landing {
     width: 600px;
+
+    .options {
+      padding-bottom: 30px;
+
+      .options-title {
+        color: #555;
+        margin: 0 0 5px 0;
+      }
+
+      .options-field {
+        label {
+          font-size: 12px;
+          color: #888;
+          display: inline-block;
+          width: 80px;
+        }
+      }
+    }
+
 
     .connection-table {
       font-size: 12px;
