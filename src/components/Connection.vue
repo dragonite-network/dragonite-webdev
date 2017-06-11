@@ -22,18 +22,18 @@
           </tr>
           <tr>
             <td width="50%">
-              <detail-item :label="'Send'" :value="data.send"></detail-item>
+              <detail-item :label="'Send'" :value="formatDataSize(data.send).text"></detail-item>
             </td>
             <td>
-              <detail-item :label="'Recv'" :value="data.recv"></detail-item>
+              <detail-item :label="'Recv'" :value="formatDataSize(data.recv).text"></detail-item>
             </td>
           </tr>
           <tr>
             <td width="50%">
-              <detail-item :label="'SendRaw'" :value="data.sendraw"></detail-item>
+              <detail-item :label="'SendRaw'" :value="formatDataSize(data.sendraw).text"></detail-item>
             </td>
             <td>
-              <detail-item :label="'RecvRaw'" :value="data.recvraw"></detail-item>
+              <detail-item :label="'RecvRaw'" :value="formatDataSize(data.recvraw).text"></detail-item>
             </td>
           </tr>
           <tr>
@@ -60,6 +60,7 @@
 
 <script>
   import DetailItem from './DetailItem'
+  import { formatDataSize } from '../utils/data_size_formater'
   export default {
     components: {DetailItem},
     name: 'connection',
@@ -71,27 +72,20 @@
         downrate: 'N/A'
       }
     },
-    created () {
-      this.speedCalc()
+    watch: {
+      data (data, oldData) {
+        let upDiff = data.sendraw - oldData.sendraw
+        let downDiff = data.recvraw - oldData.recvraw
+
+        this.uprate = formatDataSize(upDiff).text + '/s'
+        this.downrate = formatDataSize(downDiff).text + '/s'
+      }
     },
     methods: {
       toggle () {
         this.open = !this.open
       },
-      speedCalc () {
-        let prevUprate = 0
-        let prevDownrate = 0
-        setInterval(() => {
-          let upBitps = this.data.sendraw - prevUprate
-          let downBitps = this.data.recvraw - prevDownrate
-
-          this.uprate = (upBitps / (1024 * 1024)).toFixed(2) + ' MB/s'
-          this.downrate = (downBitps / (1024 * 1024)).toFixed(2) + ' MB/s'
-
-          prevUprate = this.data.sendraw
-          prevDownrate = this.data.recvraw
-        }, 1000)
-      }
+      formatDataSize
     }
   }
 </script>
