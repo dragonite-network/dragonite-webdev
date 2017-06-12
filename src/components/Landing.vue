@@ -53,7 +53,7 @@
     },
     methods: {
       fetchData () {
-        setInterval(async () => {
+        setTimeout(async () => {
           try {
             const res = await fetch(this.api)
             const json = await res.json()
@@ -62,7 +62,8 @@
           } catch (e) {
             this.apiStatus = e.toString()
           }
-        }, this.$route.query.tick || 1000)
+          this.fetchData()
+        })
       }
     },
     beforeRouteUpdate (to, from, next) {
