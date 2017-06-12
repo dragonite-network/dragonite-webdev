@@ -55,7 +55,7 @@
       fetchData () {
         setInterval(async () => {
           try {
-            const res = await fetch(this.$route.query.api)
+            const res = await fetch(this.api)
             const json = await res.json()
             this.latest = json
             this.apiStatus = 'API Server Connected'
@@ -64,6 +64,11 @@
           }
         }, this.$route.query.tick || 1000)
       }
+    },
+    beforeRouteUpdate (to, from, next) {
+      next()
+      this.api = to.query.api || 'http://localhost:8000/statistics'
+      this.tick = to.query.tick || 1000
     }
   }
 </script>
