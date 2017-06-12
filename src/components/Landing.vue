@@ -1,14 +1,17 @@
 <template>
   <div class="landing">
     <div class="options">
-      <p class="options-title">Options</p>
-      <div class="options-field">
-        <label>API Address</label>
-        <input v-model="api">
-      </div>
-      <div class="options-field">
-        <label>Tick</label>
-        <input v-model="tick">
+      <p class="options-title" @click="toggleOptions">Options <small>[{{optionOpen ? '-' : '+'}}]</small></p>
+      <div v-show="optionOpen">
+        <div class="options-field">
+          <label>API Address</label>
+          <input v-model="api">
+        </div>
+        <div class="options-field">
+          <label>Tick</label>
+          <input v-model="tick">
+        </div>
+        <button @click="apply">Apply</button>
       </div>
       <div class="api-status" v-show="apiStatus">{{apiStatus}}</div>
     </div>
@@ -35,41 +38,42 @@
     data () {
       return {
         latest: {},
-        api: this.$route.query.api || 'http://localhost:8000/statistics',
-        tick: this.$route.query.tick || 1000,
-        apiStatus: ''
-      }
-    },
-    watch: {
-      api (val) {
-        this.$router.push({ path: '/', query: { api: val, tick: this.tick }})
-      },
-      tick (val) {
-        this.$router.push({ path: '/', query: { api: this.api, tick: val }})
+        api: 'http://localhost:8000/statistics',
+        tick: 1000,
+        apiStatus: '',
+        optionOpen: false
       }
     },
     created () {
       this.fetchData()
     },
     methods: {
+      toggleOptions () {
+        this.optionOpen = !this.optionOpen
+      },
       fetchData () {
-        setTimeout(async () => {
+        this.$fetchInterval = setInterval(async () => {
           try {
-            const res = await fetch(this.api)
+            const res = await fetch(this.$route.query.api)
             const json = await res.json()
             this.latest = json
             this.apiStatus = 'API Server Connected'
           } catch (e) {
             this.apiStatus = e.toString()
           }
-          this.fetchData()
-        })
+        }, this.$route.query.tick || 1000)
+      },
+      apply () {
+        this.$router.push({ path: '/', query: { api: this.api, tick: this.tick }})
       }
     },
-    beforeRouteUpdate (to, from, next) {
+    beforeRouteUpdate (to, _, next) {
       next()
       this.api = to.query.api || 'http://localhost:8000/statistics'
-      this.tick = to.query.tick || 1000
+      this.tick = to.query.tick >= 100 ? to.query.tick : 1000
+
+      clearInterval(this.$fetchInterval)
+      this.fetchData()
     }
   }
 </script>
@@ -84,6 +88,8 @@
       .options-title {
         color: #555;
         margin: 0 0 5px 0;
+        cursor: pointer;
+        display: inline-block;
       }
 
       .options-field {
@@ -98,7 +104,9 @@
           width: 300px;
         }
       }
-
+      button {
+        margin: 10px 2px;
+      }
       .api-status {
         font-size: 12px;
         padding: 5px 5px;
