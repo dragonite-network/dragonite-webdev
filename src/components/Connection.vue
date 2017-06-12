@@ -74,8 +74,10 @@
     },
     watch: {
       data (data, oldData) {
-        let upDiff = data.sendraw - oldData.sendraw
-        let downDiff = data.recvraw - oldData.recvraw
+        const tick = this.$route.query.tick
+
+        const upDiff = (data.sendraw - oldData.sendraw) * (1000 / tick)
+        const downDiff = (data.recvraw - oldData.recvraw) * (1000 / tick)
 
         this.uprate = formatDataSize(upDiff).text + '/s'
         this.downrate = formatDataSize(downDiff).text + '/s'
