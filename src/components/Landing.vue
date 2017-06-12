@@ -38,8 +38,8 @@
     data () {
       return {
         latest: {},
-        api: 'http://localhost:8000/statistics',
-        tick: 1000,
+        api: this.$route.query.api || 'http://localhost:8000/statistics',
+        tick: this.$route.query.tick || 1000,
         apiStatus: '',
         optionOpen: false
       }
