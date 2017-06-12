@@ -10,6 +10,7 @@
         <label>Tick</label>
         <input v-model="tick">
       </div>
+      <div class="api-status" v-show="apiStatus">{{apiStatus}}</div>
     </div>
     <table class="connection-table">
       <tr>
@@ -34,8 +35,9 @@
     data () {
       return {
         latest: {},
-        api: this.$route.query.api,
-        tick: this.$route.query.tick
+        api: this.$route.query.api || 'http://localhost:8000/statistics',
+        tick: this.$route.query.tick || 1000,
+        apiStatus: ''
       }
     },
     watch: {
@@ -52,9 +54,14 @@
     methods: {
       fetchData () {
         setInterval(async () => {
-          const res = await fetch(this.$route.query.api)
-          const json = await res.json()
-          this.latest = json
+          try {
+            const res = await fetch(this.$route.query.api)
+            const json = await res.json()
+            this.latest = json
+            this.apiStatus = 'API Server Connected'
+          } catch (e) {
+            this.apiStatus = e.toString()
+          }
         }, this.$route.query.tick || 1000)
       }
     }
@@ -80,6 +87,18 @@
           display: inline-block;
           width: 80px;
         }
+
+        input {
+          width: 300px;
+        }
+      }
+
+      .api-status {
+        font-size: 12px;
+        padding: 5px 5px;
+        border: solid 1px #eee;
+        color: #888;
+        margin-top: 10px;
       }
     }
 
