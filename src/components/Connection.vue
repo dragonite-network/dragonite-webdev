@@ -1,6 +1,6 @@
 <template>
   <tbody class="connection">
-    <tr @click="toggle">
+    <tr class="conn-row" @click="toggle">
       <th align="right">{{index}}</th>
       <th align="left">{{data.description}}</th>
       <th align="left">{{data.remote}}</th>
@@ -97,6 +97,13 @@
   .connection {
     color: #666;
     border-bottom: solid 1px #e2e2e2;
+    .conn-row {
+      cursor: pointer;
+
+      &:hover {
+        background-color: #fcfcfc;
+      }
+    }
 
     td {
       padding: 12px 5px;
