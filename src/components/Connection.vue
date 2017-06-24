@@ -74,13 +74,13 @@
     },
     watch: {
       data (data, oldData) {
-        const tick = this.$route.query.tick
+        const tick = this.$route.query.tick || 1000
 
         const upDiff = (data.sendraw - oldData.sendraw) * (1000 / tick)
         const downDiff = (data.recvraw - oldData.recvraw) * (1000 / tick)
 
-        this.uprate = formatDataSize(upDiff).text + '/s'
-        this.downrate = formatDataSize(downDiff).text + '/s'
+        this.uprate = this.formatDataSize(upDiff).text + '/s'
+        this.downrate = this.formatDataSize(downDiff).text + '/s'
       }
     },
     methods: {
