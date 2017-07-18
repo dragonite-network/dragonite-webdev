@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <p class="web-title">Dragonite WebDev</p>
     <router-view></router-view>
   </div>
 </template>
@@ -27,11 +26,5 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-
-    .web-title {
-      color: #FF8F0F;
-      font-weight: lighter;
-      margin: 10px 0 20px 0;
-    }
   }
 </style>

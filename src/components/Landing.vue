@@ -1,5 +1,7 @@
 <template>
   <div class="landing">
+    <p class="web-title">{{latest.title}}</p>
+    <p class="web-version">{{latest.version}}</p>
     <div class="options">
       <p class="options-title" @click="toggleOptions">Options <small>[{{optionOpen ? '-' : '+'}}]</small></p>
       <div v-show="optionOpen">
@@ -83,6 +85,20 @@
 <style lang="scss">
   .landing {
     width: 600px;
+
+    .web-title {
+      color: #FF8F0F;
+      font-weight: lighter;
+      margin: 10px 0 0 0;
+      text-align: center;
+    }
+
+    .web-version {
+      color: #aaa;
+      text-align: center;
+      font-size: 12px;
+      margin: 5px 0 20px 0;
+    }
 
     .options {
       padding-bottom: 30px;
